@@ -5,20 +5,39 @@ import { NavLink } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { AuthContext } from "@/context/AuthContext";
+import { useLogout } from "@/hooks/useLogout";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const { logout } = useLogout();
+  const authContext = useContext(AuthContext);
+
+  const { token } = authContext?.state || {};
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const authContext = useContext(AuthContext);
+  const handleLogout = () => {
+    logout();
+    setIsLoggedIn(false);
+  };
 
   useEffect(() => {
-    if (authContext?.state.token) setIsLoggedIn(true);
-  }, [authContext?.state.token]);
+    setIsLoggedIn(!!token);
+  }, [token]);
+
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      setIsLoggedIn(true);
+      authContext?.dispatch({
+        type: "LOGIN",
+        payload: JSON.parse(localStorage.getItem("user")!),
+      });
+    }
+  }, []);
 
   return (
     <header className="bg-slate-900 text-orange-300 shadow-md shadow-slate-950">
@@ -47,8 +66,8 @@ const Header = () => {
         </nav>
         <div id="CTA" className="hidden items-center gap-4 md:flex">
           {isLoggedIn ? (
-            <Button variant="outline">
-              <NavLink to="/signup">Log Out</NavLink>
+            <Button variant="outline" onClick={handleLogout}>
+              Log Out{" "}
             </Button>
           ) : (
             <>
@@ -98,8 +117,8 @@ const Header = () => {
           <div className="w-[calc(100%-6rem)] outline outline-1" />
           <div id="CTA" className="flex items-center gap-4">
             {isLoggedIn ? (
-              <Button variant="outline">
-                <NavLink to="/signup">Log Out</NavLink>
+              <Button variant="outline" onClick={handleLogout}>
+                Log Out
               </Button>
             ) : (
               <>

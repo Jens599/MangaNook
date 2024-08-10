@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse, isAxiosError } from "axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 
@@ -12,19 +12,30 @@ export const useSignup = () => {
     setIsLoading(true);
     setError(null);
 
-    await axios
-      .post("/user/signup", { name, email, password })
-      .then((res) => {
-        console.log(res.data);
-        authContext?.dispatch({ type: "LOGIN", payload: res.data });
-      })
-      .catch((err) => {
-        setError(err.message || "An error occurred during signup");
-        console.log("Error:", err);
-      })
-      .finally(() => {
-        setIsLoading(false);
+    try {
+      const response: AxiosResponse = await axios.post("/user/signup", {
+        name,
+        email,
+        password,
       });
+
+      if (response.status === 200) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+
+        authContext?.dispatch({ type: "LOGIN", payload: response.data });
+      }
+    } catch (e: unknown) {
+      if (isAxiosError(e)) {
+        console.error(e.response?.data.error);
+        setError(e.response?.data.error);
+      } else {
+        const errorMessage = "An unexpected error occurred";
+        console.error(errorMessage);
+        setError(errorMessage);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return { signup, isLoading, error };

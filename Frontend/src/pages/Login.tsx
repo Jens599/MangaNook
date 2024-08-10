@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import hero from "@/assets/Luffy.jpg";
 import { useLogin } from "@/hooks/useLogin";
 
@@ -9,9 +9,11 @@ const Signup = () => {
     password: "",
   });
 
-  const { login } = useLogin();
+  const { login, error, isLoading } = useLogin();
 
   const { email, password } = fields;
+
+  const navigate = useNavigate();
 
   const handleFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFields({
@@ -30,6 +32,7 @@ const Signup = () => {
 
     try {
       await login(email, password);
+      navigate("/");
     } catch (error) {
       console.error("Sign up failed:", error);
     }
@@ -67,10 +70,18 @@ const Signup = () => {
           />
           <button
             type="submit"
-            className="col-span-2 rounded-md border py-4 font-black hover:bg-red-950"
+            className="col-span-2 rounded-md border py-4 font-black hover:bg-red-950 disabled:bg-slate-950 disabled:text-slate-300"
+            disabled={isLoading}
           >
             Log In
           </button>
+
+          {error && (
+            <div className="col-span-full text-wrap rounded-lg border bg-zinc-800 px-4 py-4 text-center font-bold text-red-500">
+              {error}
+            </div>
+          )}
+
           <div className="col-span-full flex place-content-center gap-2">
             Don't have an account?
             <NavLink
