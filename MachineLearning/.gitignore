@@ -1,0 +1,20 @@
+# MachineLearning/.gitignore
+
+# Ignore pickle files
+*.pkl
+
+# Ignore large data files
+/data/*.pkl
+/data/mat-*.pkl
+
+# Ignore Python bytecode files
+*.pyc
+__pycache__/
+
+# Ignore virtual environment files
+venv/
+env/
+
+# Ignore IDE files
+.vscode/
+.idea/

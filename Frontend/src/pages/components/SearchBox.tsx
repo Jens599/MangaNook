@@ -1,20 +1,38 @@
 import { Input } from "@/components/ui/input";
 import { ChangeEvent, useEffect, useState } from "react";
-import FS, { manga } from "./data/FuseOperations";
-import { FuseResult } from "fuse.js";
-import React from "react";
+import FS, { Manga } from "./data/FuseOperations";
 
 const SearchBox = () => {
   const [query, setQuery] = useState<string>("");
-  const [result, setResult] = useState<FuseResult<manga>[] | null>([]);
+
+  const [result, setResult] = useState<Manga[] | null>(null);
+
+  const [debouncedQuery, setDebouncedQuery] = useState<string>(query);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
-    console.log(query, result);
   };
 
+  // Debounce the query input
   useEffect(() => {
-    setResult(FS(query));
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
   }, [query]);
+
+  useEffect(() => {
+    const res = FS(debouncedQuery);
+    if (res.length !== 0) setResult(res);
+    else setResult(null);
+  }, [debouncedQuery]);
+
+  useEffect(() => {
+    console.log(result);
+  }, [result]);
 
   return (
     <div className="relative mb-28 h-44 w-full">
@@ -31,19 +49,15 @@ const SearchBox = () => {
           className="w-80 cursor-pointer border-2 bg-slate-900 hover:bg-slate-800"
         />
       </div>
-      {result?.length ? (
-        <div className="absolute top-3/4 flex h-44 w-full bg-slate-950">
-          <div className="grid w-full place-items-center text-white">
-            {result.slice(0, 3).map((item) => (
-              <React.Fragment key={item.item.manga_id}>
-                <div className="flex size-full items-center justify-center border text-xl">
-                  {item.item.title}
-                </div>
-              </React.Fragment>
-            ))}
-          </div>
+      {result && (
+        <div className="absolute top-3/4 grid h-44 w-full place-items-center bg-slate-950">
+          {result.slice(0, 3).map((manga) => (
+            <div className="grid size-full place-items-center border">
+              <div className="flex">{manga.title}</div>
+            </div>
+          ))}{" "}
         </div>
-      ) : null}
+      )}
     </div>
   );
 };

@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Data, fetchData } from "./components/data/Data";
 import FlashCard from "./components/FlashCard";
+import { AuthContext } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const handleProfileChange = () => {};
@@ -8,6 +10,16 @@ const Profile = () => {
   const [ids, setIds] = useState<number[] | null>(null);
   const [data, setData] = useState<Data[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const authContext = useContext(AuthContext);
+
+  const { token } = authContext?.state || {};
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) navigate("/");
+  }, [token]);
 
   useEffect(() => {
     setIds([13, 2, 8, 6, 90]);
