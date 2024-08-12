@@ -1,5 +1,3 @@
-# data/README.md
-
 # Data Folder Contents
 
 The `data` folder should Contain the following files:
