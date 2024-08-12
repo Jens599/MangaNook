@@ -23,7 +23,7 @@ const Signup = () => {
       [e.target.name]: e.target.value,
     });
 
-    console.log(fields);
+    // console.log(fields)
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -32,7 +32,7 @@ const Signup = () => {
       alert("Passwords do not match");
       return;
     }
-    console.log("Signing up", name, email, password);
+    // console.log("Signing up", name, email, password);
 
     try {
       await signup(name, email, password);

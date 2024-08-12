@@ -47,7 +47,7 @@ def recommend(id):
 
     recommendations = []
 
-    for i in manga_by_similarity[:10]:
+    for i in manga_by_similarity[:12]:
         recommendations.append(
             {
                 "id": f"{manga.iloc[i[0]]["manga_id"]}",
@@ -58,7 +58,7 @@ def recommend(id):
     return recommendations
 
 
-@app.route("/recommendManga", methods=["POST"])
+@app.route("/operation/recommendManga", methods=["POST"])
 def recommendManga():
     query = request.json["query"]  # type: ignore
     return jsonify(recommend(int(query)))

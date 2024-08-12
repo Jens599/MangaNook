@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Data, fetchData } from "./components/data/Data";
+import { Data, fetchMultipleData } from "./components/data/Data";
 import FlashCard from "./components/FlashCard";
 import { AuthContext } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -27,26 +27,21 @@ const Profile = () => {
 
   useEffect(() => {
     const getData = async () => {
-      if (!ids) return;
-
       setLoading(true);
-      try {
-        const promises = ids.map((id) => fetchData(id));
 
-        const results = await Promise.allSettled(promises);
+      if (ids && ids?.length !== 0) {
+        try {
+          console.log(`ids: ${ids}`);
 
-        const resolvedResults = results.filter(
-          (result) => result.status === "fulfilled",
-        ) as PromiseFulfilledResult<Data>[];
+          // Fetch data for up to 20 IDs
+          const results = await fetchMultipleData(ids.slice(0, 3));
 
-        if (resolvedResults.length > 0) {
-          setData(resolvedResults.map((result) => result.value));
+          setData(results);
+        } catch (error) {
+          console.error(`Error fetching data: ${error}`);
+        } finally {
           setLoading(false);
-        } else {
-          console.error("All promises failed.");
         }
-      } catch (error) {
-        console.error(error);
       }
     };
 

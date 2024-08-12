@@ -2,15 +2,30 @@ import { Input } from "@/components/ui/input";
 import { ChangeEvent, useEffect, useState } from "react";
 import FS, { Manga } from "./data/FuseOperations";
 
-const SearchBox = () => {
+interface Props {
+  handleSearchOperation: (query: Manga) => void;
+}
+
+const SearchBox = ({ handleSearchOperation }: Props) => {
   const [query, setQuery] = useState<string>("");
 
   const [result, setResult] = useState<Manga[] | null>(null);
 
   const [debouncedQuery, setDebouncedQuery] = useState<string>(query);
 
+  const [searchQuery, setSearchQuery] = useState<Manga>();
+
+  const [q, setQ] = useState("");
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
+    setQ(e.target.value);
+  };
+
+  const handleSet = (value: Manga) => {
+    setQ(value.title);
+    setQuery("");
+    setSearchQuery(value);
   };
 
   // Debounce the query input
@@ -30,29 +45,36 @@ const SearchBox = () => {
     else setResult(null);
   }, [debouncedQuery]);
 
-  useEffect(() => {
-    console.log(result);
-  }, [result]);
-
   return (
-    <div className="relative mb-28 h-44 w-full">
-      <div className="flex h-full w-full items-center justify-center gap-8 rounded-lg bg-slate-700 px-52">
-        <Input
-          type="text"
-          placeholder="One Piece, Violet Evergarden"
-          className="text-center"
-          onChange={(e) => handleChange(e)}
-        />
-        <Input
-          type="button"
-          value="Search"
-          className="w-80 cursor-pointer border-2 bg-slate-900 hover:bg-slate-800"
-        />
+    <div className="relative mb-10 h-44 w-full">
+      <div className="flex h-full w-full items-center justify-center rounded-lg bg-slate-700">
+        <form
+          className="flex size-full items-center justify-center gap-8 px-52"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <Input
+            type="text"
+            placeholder="One Piece, Violet Evergarden"
+            className="text-center"
+            value={q}
+            onChange={(e) => handleChange(e)}
+          />
+          <Input
+            type="button"
+            value="Search"
+            onClick={() => searchQuery && handleSearchOperation(searchQuery)}
+            className="w-80 cursor-pointer border-2 bg-slate-900 hover:bg-slate-800"
+          />
+        </form>
       </div>
       {result && (
         <div className="absolute top-3/4 grid h-44 w-full place-items-center bg-slate-950">
-          {result.slice(0, 3).map((manga) => (
-            <div className="grid size-full place-items-center border">
+          {result.slice(0, 4).map((manga) => (
+            <div
+              className="grid size-full cursor-pointer place-items-center border"
+              key={manga.manga_id}
+              onClick={() => handleSet(manga)}
+            >
               <div className="flex">{manga.title}</div>
             </div>
           ))}{" "}
