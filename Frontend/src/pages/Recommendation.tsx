@@ -10,14 +10,20 @@ const Recommendation = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [ids, setIds] = useState<number[]>([]);
   const [searchTitle, setSearchTitle] = useState<string>("");
+  const [fetchError, setFetchError] = useState(false);
 
   const handleSearch = async (query: Manga) => {
+    setFetchError(false);
     setIds([]);
     setSearchTitle(query.title);
-    const recommendations = await getRecommendations(query);
-    recommendations.map((recommendation) =>
-      setIds((ids) => [...ids, parseInt(recommendation.id)]),
-    );
+    try {
+      const recommendations = await getRecommendations(query);
+      recommendations.map((recommendation) =>
+        setIds((ids) => [...ids, parseInt(recommendation.id)]),
+      );
+    } catch (error) {
+      setFetchError(true);
+    }
   };
 
   useEffect(() => {
@@ -48,16 +54,22 @@ const Recommendation = () => {
         <>
           <SearchBox handleSearchOperation={handleSearch} />
           {searchTitle && (
-            <h1 className="my-10 text-4xl font-black capitalize">
+            <h1 className="my-10 text-4xl font-black capitalize drop-shadow-px">
               {searchTitle}
             </h1>
           )}
           <div className="flex flex-col">
-            <div className="grid place-items-center gap-y-4 font-[inter] text-sm md:grid-cols-2 md:gap-y-10 lg:grid-cols-3 xl:grid-cols-4">
-              {data.map((m) => (
-                <FlashCard key={m.mal_id} data={m} />
-              ))}
-            </div>
+            {fetchError ? (
+              <div className="my-20 text-center text-5xl font-black text-red-600 drop-shadow-px">
+                Internal Server Error.
+              </div>
+            ) : (
+              <div className="grid place-items-center gap-y-4 font-[inter] text-sm md:grid-cols-2 md:gap-y-10 lg:grid-cols-3 xl:grid-cols-4">
+                {data.map((m) => (
+                  <FlashCard key={m.mal_id} data={m} />
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}

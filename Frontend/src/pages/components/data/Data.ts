@@ -42,47 +42,14 @@ interface ApiResponse {
   };
 }
 
-/* // Function to fetch and transform data from the API
-export const fetchData = async (id: number): Promise<Data> => {
-  const apiURL = "https://api.jikan.moe/v4/manga/";
-  try {
-    const response = await axios.get<ApiResponse>(`${apiURL}${id}`);
-    const rawData = response.data.data;
-
-    // Transform rawData to match the Data interface
-    const data: Data = {
-      mal_id: rawData.mal_id,
-      images: {
-        image_url: rawData.images.webp.image_url,
-        small_image_url: rawData.images.webp.small_image_url,
-        large_image_url: rawData.images.webp.large_image_url,
-      },
-      title: rawData.title,
-      title_japanese: rawData.title_japanese,
-      title_synonyms: rawData.title_synonyms,
-      type: rawData.type,
-      synopsis: rawData.synopsis,
-      background: rawData.background,
-      authors: rawData.authors.map((author) => ({ name: author.name })),
-      genres: rawData.genres.map((genre) => ({ name: genre.name })),
-    };
-
-    return data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error(`Error fetching data for ID ${id}: ${error.message}`);
-    } else {
-      console.error(`Unexpected error: ${error}`);
-    }
-    throw error;
-  }
-}; */
-
 // Define a delay function
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Define a function to handle rate limiting
-const rateLimitedFetch = async <T>(url: string, options?: object): Promise<T> => {
+const rateLimitedFetch = async <T>(
+  url: string,
+  options?: object,
+): Promise<T> => {
   await delay(333); // Wait for 333ms (1000ms / 3 requests = 333ms per request)
   const response = await axios.get<T>(url, options);
   return response.data;

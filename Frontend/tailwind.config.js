@@ -17,6 +17,9 @@ export default {
       },
     },
     extend: {
+      dropShadow: {
+        px: "0 5px 5px rgba(0, 0, 0, .8)",
+      },
       transitionProperty: {
         "z-index": "",
       },

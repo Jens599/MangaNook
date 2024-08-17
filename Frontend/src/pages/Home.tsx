@@ -16,9 +16,11 @@ const Home = () => {
             your journey and find your next obsession!
           </p>
           <div className="mt-6 w-full">
-            <button className="rounded-lg bg-slate-800 px-5 py-3 outline-1 hover:bg-slate-700 hover:outline">
-              <NavLink to="/signup">Get Started!</NavLink>
-            </button>
+            {true && (
+              <button className="rounded-lg bg-slate-800 px-5 py-3 outline-1 hover:bg-slate-700 hover:outline">
+                <NavLink to="/signup">Get Started!</NavLink>
+              </button>
+            )}
           </div>
         </div>
         <div className="h-[83vh] overflow-hidden">
