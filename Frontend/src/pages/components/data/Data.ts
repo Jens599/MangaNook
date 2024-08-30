@@ -55,6 +55,30 @@ const rateLimitedFetch = async <T>(
   return response.data;
 };
 
+export const noRateLimitFetch = async (id: number): Promise<Data> => {
+  const URL = `https://api.jikan.moe/v4/manga/${id}`;
+  const res = await axios.get<ApiResponse>(URL).then((res) => res.data.data);
+
+  const data: Data = {
+    mal_id: res.mal_id,
+    images: {
+      image_url: res.images.webp.image_url,
+      small_image_url: res.images.webp.small_image_url,
+      large_image_url: res.images.webp.large_image_url,
+    },
+    title: res.title,
+    title_japanese: res.title_japanese,
+    title_synonyms: res.title_synonyms,
+    type: res.type,
+    synopsis: res.synopsis,
+    background: res.background,
+    authors: res.authors.map((author) => ({ name: author.name })),
+    genres: res.genres.map((genre) => ({ name: genre.name })),
+  };
+
+  return data;
+};
+
 // Function to fetch multiple pieces of data with rate limiting
 export const fetchMultipleData = async (ids: number[]): Promise<Data[]> => {
   const apiURL = "https://api.jikan.moe/v4/manga/";

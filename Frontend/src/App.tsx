@@ -13,6 +13,7 @@ import Recommendation from "./pages/Recommendation";
 import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import MangaPage from "./pages/MangaPage";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const routes = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/recommend" element={<Recommendation />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/manga/:id" element={<MangaPage />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
     </Route>,

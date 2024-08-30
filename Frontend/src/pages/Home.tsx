@@ -18,7 +18,7 @@ const Home = () => {
           <div className="mt-6 w-full">
             {true && (
               <button className="rounded-lg bg-slate-800 px-5 py-3 outline-1 hover:bg-slate-700 hover:outline">
-                <NavLink to="/signup">Get Started!</NavLink>
+                <NavLink to="/recommend">Get Started!</NavLink>
               </button>
             )}
           </div>
