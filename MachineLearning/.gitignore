@@ -1,5 +1,7 @@
 # MachineLearning/.gitignore
 
+data
+
 # Ignore pickle files
 *.pkl
 
