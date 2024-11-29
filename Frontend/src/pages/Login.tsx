@@ -3,11 +3,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 import hero from "@/assets/Luffy.jpg";
 import { useLogin } from "@/hooks/useLogin";
 
-const Signup = () => {
+const Login = () => {
   const [fields, setFields] = useState({
     email: "",
     password: "",
   });
+
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const { login, error, isLoading } = useLogin();
 
@@ -26,7 +28,13 @@ const Signup = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
+    if (!email || !password) {
+      setIsVisible(true);
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
+      return;
+    }
     // Add your signup logic here
     console.log("Logging up", email, password);
 
@@ -40,7 +48,12 @@ const Signup = () => {
 
   return (
     <div className="grid h-[80vh] gap-4 md:grid-cols-[2fr_1fr]">
-      <div className="flex flex-col items-center justify-center">
+      <div className="relative flex flex-col items-center justify-center">
+        {isVisible && (
+          <div className="absolute top-0 flex h-10 w-2/3 items-center justify-center rounded-full bg-red-500 text-center font-semibold text-white">
+            Please fill in all fields
+          </div>
+        )}
         <h1 className="my-10 w-[80%] border-b border-slate-700 py-4 text-center text-4xl font-bold">
           Log In
         </h1>
@@ -100,4 +113,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;

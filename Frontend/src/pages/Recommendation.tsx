@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Data, fetchMultipleData } from "./components/data/Data";
 import { Manga } from "./components/data/FuseOperations";
 import { getRecommendations } from "./components/data/getRecommendations";
+import { Link } from "react-router-dom";
 
 const Recommendation = () => {
   const [data, setData] = useState<Data[]>([]);
@@ -66,7 +67,9 @@ const Recommendation = () => {
             ) : (
               <div className="grid place-items-center gap-y-4 font-[inter] text-sm md:grid-cols-2 md:gap-y-10 lg:grid-cols-3 xl:grid-cols-4">
                 {data.map((m) => (
-                  <FlashCard key={m.mal_id} data={m} />
+                  <Link to={`/manga/${m.mal_id}`}>
+                    <FlashCard key={m.mal_id} data={m} />
+                  </Link>
                 ))}
               </div>
             )}

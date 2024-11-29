@@ -11,6 +11,9 @@ const Signup = () => {
     confirmPassword: "",
   });
 
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const { signup, error, isLoading } = useSignup();
 
   const { name, email, password, confirmPassword } = fields;
@@ -28,8 +31,20 @@ const Signup = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    if (!name || !email || !password || !confirmPassword) {
+      setErrorMessage("Please fill in all fields");
+      setIsVisible(true);
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
+      return;
+    }
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setErrorMessage("Passwords do not match");
+      setIsVisible(true);
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
       return;
     }
     // console.log("Signing up", name, email, password);
@@ -45,7 +60,12 @@ const Signup = () => {
 
   return (
     <div className="grid h-[80vh] gap-4 md:grid-cols-[2fr_1fr]">
-      <div className="flex flex-col items-center justify-center">
+      <div className="relative flex flex-col items-center justify-center">
+        {isVisible && (
+          <div className="absolute flex justify-center items-center font-semibold top-0 h-10 w-2/3 rounded-full bg-red-500 text-center text-white">
+            {errorMessage}
+          </div>
+        )}
         <h1 className="my-10 w-[80%] border-b border-slate-700 py-4 text-center text-4xl font-bold">
           Sign Up
         </h1>

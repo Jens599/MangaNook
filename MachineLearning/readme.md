@@ -8,3 +8,7 @@ The `data` folder should Contain the following files:
 [generated using https://github.com/Jens599/MangaRecommender]
 
 Note: These files are loaded in the `load.py` script.
+
+```bash
+pip install Flask pandas tqdm
+```
